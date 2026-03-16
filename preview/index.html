@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Matchmaker Preview</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="glass-container">
+        <header>
+            <h1>Job Matchmaker</h1>
+            <p>Telegram Bot Preview</p>
+        </header>
+
+        <div class="chat-window" id="chatWindow">
+            <div class="message bot">
+                <div class="bubble">
+                    Welcome to <b>Job Matchmaker</b>! 👋<br><br>
+                    I aggregate jobs from Remotive, Arbeitnow, RemoteOK, and major company boards.<br><br>
+                    Enter your skills to find your perfect match.
+                </div>
+            </div>
+            <div class="message bot">
+                <div class="bubble">
+                    Use the command <b>/skills</b> followed by keywords.<br>
+                    Example: <code>/skills typescript, react, remote</code>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Type /skills react, node..." autofocus>
+            <button id="sendBtn">Send</button>
+        </div>
+    </div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js"
+            }
+        }
+    </script>
+    <script type="module">
+        import { initializeApp } from "firebase/app";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA8JRk3kIAQx1h7jxZavoRCrjT6eXXrO18",
+            authDomain: "job-telegram.firebaseapp.com",
+            projectId: "job-telegram",
+            storageBucket: "job-telegram.firebasestorage.app",
+            messagingSenderId: "703434244254",
+            appId: "1:703434244254:web:9734b54ade3377702cbb8f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
