@@ -10,7 +10,8 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d preview"
+    "deploy": "gh-pages -d preview",
+    "netlify-deploy": "netlify deploy --dir=preview --prod"
   },
   "repository": {
     "type": "git",
