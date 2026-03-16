@@ -1,89 +1,117 @@
 const mockJobs = [
-    { title: "Senior React Developer", company: "Vercel", source: "Lever", description: "Looking for TypeScript expert", url: "#" },
-    { title: "Node.js Backend Engineer", company: "Discord", source: "Greenhouse", description: "Build scalable systems", url: "#" },
-    { title: "Fullstack Engineer (React/Node)", company: "Stripe", source: "Greenhouse", description: "Remote friendly, TS mandatory", url: "#" },
-    { title: "Product Designer", company: "Figma", source: "Lever", description: "Design the future of design", url: "#" },
-    { title: "iOS Developer", company: "Nooro", source: "Remotive", description: "SwiftUI and Combine", url: "#" },
-    { title: "Python Data Scientist", company: "Google", source: "Internal", description: "AI and machine learning", url: "#" },
-    { title: "Frontend Lead", company: "Airbnb", source: "Greenhouse", description: "React and Styled Components", url: "#" },
-    { title: "Rust Core Dev", company: "Replit", source: "Lever", description: "Cloud infrastructure", url: "#" }
+    { title: "Senior React Developer", company: "Vercel", type: "Full-time", location: "Remote", tags: ["React", "TypeScript", "Next.js"], desc: "Join our core team to build the future of the web. We are looking for experts in React and server-side rendering." },
+    { title: "Node.js Backend Engineer", company: "Discord", type: "Full-time", location: "San Francisco", tags: ["Node.js", "Rust", "Scale"], desc: "Help us build the most reliable communication platform in the world. Experience with distributed systems required." },
+    { title: "Product Designer", company: "Figma", type: "Contract", location: "Remote", tags: ["UI/UX", "Visual", "Design"], desc: "Work on the design tools you use every day. We need a creative mind to push the boundaries of collaborative design." },
+    { title: "Fullstack Engineer", company: "Stripe", type: "Full-time", location: "Remote", tags: ["Ruby", "React", "Fintech"], desc: "Build the economic infrastructure of the internet. We value clean code and customer focus." }
 ];
-
-const chatWindow = document.getElementById('chatWindow');
-const userInput = document.getElementById('userInput');
-const sendBtn = document.getElementById('sendBtn');
-
-let userSkills = [];
 
 const tg = window.Telegram?.WebApp;
 if (tg) {
     tg.expand();
     tg.ready();
+    tg.HeaderColor = '#0f172a';
 }
 
-function addMessage(text, type = 'bot') {
-    const msgDiv = document.createElement('div');
-    msgDiv.className = `message ${type}`;
-    msgDiv.innerHTML = `<div class="bubble">${text}</div>`;
-    chatWindow.appendChild(msgDiv);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-}
+let jobIndex = 0;
+const cardDeck = document.getElementById('cardDeck');
+const passBtn = document.getElementById('passBtn');
+const applyBtn = document.getElementById('applyBtn');
 
-// Greet user if TWA is active
-if (tg && tg.initDataUnsafe?.user) {
-    const user = tg.initDataUnsafe.user;
-    setTimeout(() => {
-        addMessage(`Hello <b>${user.first_name}</b>! Let's find you a job.`);
-    }, 1000);
-}
+function createCard(job) {
+    const card = document.createElement('div');
+    card.className = 'job-card';
+    
+    // Aesthetic Tip: Use a random high-quality Unsplash image for dating vibe
+    const randomImg = `https://images.unsplash.com/photo-${1500000000000 + Math.floor(Math.random() * 1000000)}?auto=format&fit=crop&w=400&q=80`;
+    
+    card.innerHTML = `
+        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=400&q=80" alt="Job Image">
+        <h2>${job.title}</h2>
+        <div class="company">${job.company}</div>
+        <div class="tags">
+            <span class="tag">${job.type}</span>
+            <span class="tag">${job.location}</span>
+            ${job.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+        </div>
+        <p class="desc">${job.desc}</p>
+    `;
 
-function matchJobs(skills) {
-    if (skills.length === 0) return [];
-    return mockJobs.filter(job => {
-        const content = `${job.title} ${job.description}`.toLowerCase();
-        return skills.some(skill => content.includes(skill.toLowerCase()));
+    // Swipe logic
+    let startX = 0;
+    let currentX = 0;
+
+    card.addEventListener('touchstart', (e) => startX = e.touches[0].clientX);
+    card.addEventListener('touchmove', (e) => {
+        currentX = e.touches[0].clientX;
+        const diff = currentX - startX;
+        card.style.transform = `translateX(${diff}px) rotate(${diff / 20}deg)`;
+        
+        // Visual feedback
+        if (diff > 50) card.style.border = '2px solid #0088cc';
+        else if (diff < -50) card.style.border = '2px solid #ff4d6d';
+        else card.style.border = '1px solid rgba(255, 255, 255, 0.1)';
     });
-}
 
-function handleInput() {
-    const val = userInput.value.trim();
-    if (!val) return;
-
-    addMessage(val, 'user');
-    userInput.value = '';
-
-    setTimeout(() => {
-        if (val.startsWith('/skills')) {
-            const skillsStr = val.replace('/skills', '').trim();
-            userSkills = skillsStr.split(',').map(s => s.trim()).filter(s => s);
-            if (userSkills.length === 0) {
-                addMessage("Please provide at least one skill. Example: <code>/skills react</code>");
-            } else {
-                addMessage(`Skills updated to: <b>${userSkills.join(', ')}</b>. Use <b>/matches</b> to see results!`);
-            }
-        } else if (val === '/matches') {
-            const matches = matchJobs(userSkills);
-            if (matches.length === 0) {
-                addMessage("No matches found for your current skills. Use <b>/skills</b> to update them!");
-            } else {
-                addMessage(`Found <b>${matches.length}</b> matches for you:`);
-                matches.forEach(job => {
-                    const card = `
-                        <div class="job-card">
-                            <h4>${job.title}</h4>
-                            <div class="meta">${job.company} • ${job.source}</div>
-                        </div>
-                    `;
-                    addMessage(card);
-                });
-            }
+    card.addEventListener('touchend', () => {
+        const diff = currentX - startX;
+        if (Math.abs(diff) > 100) {
+            diff > 0 ? apply() : pass();
         } else {
-            addMessage("I don't recognize that command. Try <b>/skills</b> or <b>/matches</b>.");
+            card.style.transform = '';
+            card.style.border = '1px solid rgba(255, 255, 255, 0.1)';
         }
-    }, 600);
+    });
+
+    return card;
 }
 
-sendBtn.addEventListener('click', handleInput);
-userInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') handleInput();
+function nextJob() {
+    if (jobIndex < mockJobs.length) {
+        const card = createCard(mockJobs[jobIndex]);
+        cardDeck.appendChild(card);
+        jobIndex++;
+    } else {
+        document.querySelector('.empty-state').style.display = 'block';
+    }
+}
+
+function pass() {
+    const card = cardDeck.querySelector('.job-card:last-child');
+    if (!card) return;
+    card.classList.add('swipe-left');
+    setTimeout(() => {
+        card.remove();
+        nextJob();
+    }, 300);
+}
+
+function apply() {
+    const card = cardDeck.querySelector('.job-card:last-child');
+    if (!card) return;
+    card.classList.add('swipe-right');
+    
+    // Haptic feedback
+    if (tg) tg.HapticFeedback.notificationOccurred('success');
+    
+    setTimeout(() => {
+        card.remove();
+        nextJob();
+        // Show Telegram Alert on match
+        if (tg) tg.showAlert("It's a Match! 🎯 Your application has been sent.");
+    }, 300);
+}
+
+passBtn.addEventListener('click', pass);
+applyBtn.addEventListener('click', apply);
+
+// Initial load
+nextJob();
+
+// Tab switching (UI Only)
+document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+        document.querySelector('.nav-item.active').classList.remove('active');
+        item.classList.add('active');
+        if (tg) tg.HapticFeedback.impactOccurred('light');
+    });
 });

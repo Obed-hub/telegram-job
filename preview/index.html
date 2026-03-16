@@ -11,32 +11,43 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <div class="glass-container">
+    <div class="app-container">
         <header>
-            <h1>Job Matchmaker</h1>
-            <p>Telegram Bot Preview</p>
+            <div class="logo">JobMatch</div>
+            <div class="header-actions">
+                <button id="filterBtn" class="icon-btn">🔍</button>
+            </div>
         </header>
 
-        <div class="chat-window" id="chatWindow">
-            <div class="message bot">
-                <div class="bubble">
-                    Welcome to <b>Job Matchmaker</b>! 👋<br><br>
-                    I aggregate jobs from Remotive, Arbeitnow, RemoteOK, and major company boards.<br><br>
-                    Enter your skills to find your perfect match.
+        <main class="discovery">
+            <div id="cardDeck" class="card-deck">
+                <!-- Cards will be injected here by JS -->
+                <div class="empty-state">
+                    <p>Searching for more matches...</p>
+                    <div class="loader"></div>
                 </div>
             </div>
-            <div class="message bot">
-                <div class="bubble">
-                    Use the command <b>/skills</b> followed by keywords.<br>
-                    Example: <code>/skills typescript, react, remote</code>
-                </div>
-            </div>
-        </div>
 
-        <div class="input-area">
-            <input type="text" id="userInput" placeholder="Type /skills react, node..." autofocus>
-            <button id="sendBtn">Send</button>
-        </div>
+            <div class="controls">
+                <button id="passBtn" class="control-btn pass">✕</button>
+                <button id="applyBtn" class="control-btn apply">♥</button>
+            </div>
+        </main>
+
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-tab="discover">
+                <span class="icon">🔥</span>
+                <span class="label">Discover</span>
+            </button>
+            <button class="nav-item" data-tab="matches">
+                <span class="icon">💬</span>
+                <span class="label">Matches</span>
+            </button>
+            <button class="nav-item" data-tab="profile">
+                <span class="icon">👤</span>
+                <span class="label">Profile</span>
+            </button>
+        </nav>
     </div>
 
     <script type="importmap">

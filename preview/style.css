@@ -1,8 +1,10 @@
 :root {
-    --primary: #0088cc; /* Telegram Blue */
-    --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --primary: #0088cc;
+    --accent: #ff4d6d;
+    --bg: #0f172a;
+    --card-bg: #1e293b;
+    --glass: rgba(255, 255, 255, 0.05);
+    --border: rgba(255, 255, 255, 0.1);
     --text: #f8fafc;
     --text-muted: #94a3b8;
 }
@@ -11,175 +13,235 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
     font-family: 'Outfit', sans-serif;
-    background: var(--bg-gradient);
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background-color: var(--bg);
     color: var(--text);
+    height: 100vh;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
 }
 
-.glass-container {
-    width: 90%;
-    max-width: 500px;
-    height: 80vh;
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
-    border-radius: 24px;
+.app-container {
+    width: 100%;
+    max-width: 450px;
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    animation: fadeIn 0.8s ease-out;
+    background: radial-gradient(circle at top right, #1e293b, #0f172a);
+    position: relative;
 }
 
 header {
-    padding: 24px;
-    border-bottom: 1px solid var(--glass-border);
-    text-align: center;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
 }
 
-header h1 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    letter-spacing: -0.5px;
+.logo {
+    font-weight: 700;
+    font-size: 1.4rem;
+    background: linear-gradient(90deg, #0088cc, #4cc9f0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-header p {
-    font-size: 0.8rem;
-    color: var(--text-muted);
+.icon-btn {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
 }
 
-.chat-window {
+main {
     flex: 1;
-    overflow-y: auto;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--glass-border) transparent;
-}
-
-.chat-window::-webkit-scrollbar {
-    width: 4px;
-}
-
-.chat-window::-webkit-scrollbar-thumb {
-    background: var(--glass-border);
-    border-radius: 10px;
-}
-
-.message {
-    display: flex;
-    max-width: 85%;
-}
-
-.message.bot {
-    align-self: flex-start;
-}
-
-.message.user {
-    align-self: flex-end;
-}
-
-.bubble {
-    padding: 12px 16px;
-    border-radius: 18px;
-    font-size: 0.95rem;
-    line-height: 1.5;
     position: relative;
-    transition: transform 0.2s;
-}
-
-.bot .bubble {
-    background: #242f3d;
-    border-bottom-left-radius: 4px;
-    color: #fff;
-}
-
-.user .bubble {
-    background: var(--primary);
-    border-bottom-right-radius: 4px;
-    color: #fff;
-}
-
-code {
-    background: rgba(0,0,0,0.3);
-    padding: 2px 4px;
-    border-radius: 4px;
-    font-family: monospace;
-}
-
-.input-area {
     padding: 20px;
     display: flex;
-    gap: 12px;
-    background: rgba(0,0,0,0.2);
-    border-bottom-left-radius: 24px;
-    border-bottom-right-radius: 24px;
+    flex-direction: column;
+    align-items: center;
 }
 
-input {
-    flex: 1;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--glass-border);
-    border-radius: 12px;
-    padding: 12px 16px;
-    color: #fff;
-    outline: none;
-    transition: border-color 0.3s;
-}
-
-input:focus {
-    border-color: var(--primary);
-}
-
-button {
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    padding: 0 20px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.2s, transform 0.2s;
-}
-
-button:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-}
-
-button:active {
-    transform: translateY(0);
+.card-deck {
+    width: 100%;
+    height: 70%;
+    position: relative;
+    perspective: 1000px;
 }
 
 .job-card {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--glass-border);
-    border-radius: 12px;
-    padding: 12px;
-    margin-top: 8px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    cursor: grab;
+    transition: transform 0.1s;
+    user-select: none;
+    overflow: hidden;
 }
 
-.job-card h4 {
-    font-size: 0.9rem;
+.job-card:active {
+    cursor: grabbing;
+}
+
+.job-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin-bottom: 16px;
+}
+
+.job-card h2 {
+    font-size: 1.5rem;
     margin-bottom: 4px;
 }
 
-.job-card .meta {
-    font-size: 0.75rem;
-    color: var(--text-muted);
+.job-card .company {
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 12px;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+.job-card .tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.tag {
+    background: var(--glass);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    border: 1px solid var(--border);
+}
+
+.job-card .desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+
+.controls {
+    margin-top: auto;
+    display: flex;
+    gap: 24px;
+    padding-bottom: 40px;
+}
+
+.control-btn {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+}
+
+.control-btn:active {
+    transform: scale(0.9);
+}
+
+.control-btn.pass {
+    background: var(--glass);
+    color: #ff4d6d;
+    border: 1px solid rgba(255, 77, 109, 0.2);
+}
+
+.control-btn.apply {
+    background: linear-gradient(45deg, #0088cc, #4cc9f0);
+    color: white;
+}
+
+.bottom-nav {
+    height: 70px;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(20px);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid var(--border);
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.nav-item.active {
+    color: var(--primary);
+}
+
+.nav-item .icon {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+}
+
+.nav-item .label {
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.empty-state {
+    display: none;
+    text-align: center;
+    margin-top: 100px;
+}
+
+.loader {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--glass);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Swipe animations */
+.swipe-left {
+    transform: translateX(-1000px) rotate(-20deg) !important;
+    transition: 0.5s !important;
+}
+
+.swipe-right {
+    transform: translateX(1000px) rotate(20deg) !important;
+    transition: 0.5s !important;
 }
